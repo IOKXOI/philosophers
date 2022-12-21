@@ -4,9 +4,12 @@
 int create_philo(t_philo *philo)
 {
     philo->i = 0;
-    philo->id = malloc(sizeof(pthread_t) * philo->nb + 1);
+    philo->id = malloc(sizeof(pthread_t) * (philo->nb + 1));
     if(!philo->id)
-        return(0);
+        return (0);
+    philo->philo_last_eat = malloc(sizeof(int) * philo->nb);
+    if (!philo->philo_last_eat)
+        return (0);
     while (philo->i < philo->nb)
     {
         if (pthread_create(&philo->id[philo->i], NULL, &routine, philo))
@@ -76,12 +79,14 @@ int create_mutex(t_philo *philo)
     return(1);
 }
 
+#include <limits.h>
 
 int main(int argc, char *argv[])
 {
     t_philo philo;
     philo.fork = 0;
     philo.nb = 0;
+    philo.death = 0;
     if (!args_traitment(argc, argv, &philo))
         return (1);
     if(!give_fork(&philo))
@@ -92,3 +97,4 @@ int main(int argc, char *argv[])
         return(1);
     return (0);
 }
+
