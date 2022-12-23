@@ -1,38 +1,47 @@
 #include "philosopher.h"
 
-void think(int i, t_philo *philo)
+static int think(int i, t_philo *philo)
 {
-	if (!philo->death)
-		pthread_mutex_unlock(philo->mutex);
-	if (!philo->death)
-		pthread_mutex_unlock(philo->mutex);
-	if (!philo->death)
-		printf("%ld %d is thinking\n", gettime(), i);
+	if (check_death(philo))
+		mutex_print(i, "is thinking", philo);
+	usleep(100);
+	return (1);
 }
 
-void eat(int i, t_philo *philo)
+static int eat(int i, t_philo *philo)
 {
-	if (!philo->death)
-		pthread_mutex_lock(philo->mutex);
-	if (!philo->death)
-		pthread_mutex_lock(philo->mutex);
-	if (!philo->death)
-		printf("%ld %d has taken a fork\n", gettime(), i);
-	if (!philo->death)
-		printf("%ld %d is eating\n", gettime(), i);
+	if (check_death(philo))
+		pthread_mutex_lock(&philo->fork_mutex[i - 1]);
+	if (check_death(philo))
+		pthread_mutex_lock(&philo->fork_mutex[i]);
+	if (check_death(philo))
+		mutex_print(i, "has taken a fork", philo);
+	if (check_death(philo))
+		mutex_print(i, "is eating", philo);
 	philo->philo_last_eat[i - 1] = gettime();
-	usleep(philo->mealtime);
+	// if (!philo->philo_last_eat[i - 1])
+	//{
+	//	write(probleme gettime of day);
+	//	return (0);
+	// }
+	usleep(philo->time_to_eat);
+	if (check_death(philo))
+		pthread_mutex_unlock(&philo->fork_mutex[i]);
+	if (check_death(philo))
+		pthread_mutex_unlock(&philo->fork_mutex[i - 1]);
+	return (1);
 }
 
-void sleeping(int i, t_philo *philo)
+static int sleeping(int i, t_philo *philo)
 {
-	if (!philo->death)
-		printf("%ld %d is sleeping\n", gettime(), i);
-	if (!philo->death)
-		usleep(philo->sleep_time);
+	if (check_death(philo))
+		mutex_print(i, "is sleeping", philo);
+	if (check_death(philo))
+		usleep(philo->time_to_sleep);
+	return (1);
 }
 
-
+/*
 void *monitoring(void *arg)
 {
 	int				i;
@@ -62,22 +71,23 @@ void *monitoring(void *arg)
 	}
 	return (NULL);
 }
-
+*/
 void *routine(void *arg)
 {
 	t_philo *philo = arg;
 	int i = philo->i + 1;
-	while(!philo->death)
+	usleep(1000);
+	while (check_death(philo))
 	{
-		think(i, philo);
 		eat(i, philo);
 		sleeping(i, philo);
-		//if (philo->meal_to_eat)
-		// {
-			// philo->meal_to_eat--;
-			// if (!philo->meal_to_eat)
-				// end;
-		// }
+		think(i, philo);
+		// if (philo->meal_to_eat)
+		//{
+		// philo->meal_to_eat--;
+		// if (!philo->meal_to_eat)
+		// end;
+		//}
 	}
 	return (NULL);
 }

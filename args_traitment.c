@@ -13,7 +13,7 @@ static int	argument_count(int argc)
 static int parsing_argv(int argc, char *argv[], t_philo *philo)
 {
 	if (!s_atoi(argv[1], &philo->nb) || !s_atoi(argv[2], &philo->time_to_die) ||
-		 !s_atoi(argv[3], &philo->mealtime) || !s_atoi(argv[4], &philo->sleep_time))
+		 !s_atoi(argv[3], &philo->time_to_eat) || !s_atoi(argv[4], &philo->time_to_sleep))
 		return (0);
 	if (argc == 6)
 	{
