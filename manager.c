@@ -6,7 +6,7 @@
 /*   By: sydauria <sydauria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/21 05:21:36 by sydauria          #+#    #+#             */
-/*   Updated: 2022/12/22 00:31:44 by sydauria         ###   ########.fr       */
+/*   Updated: 2022/12/31 06:09:02 by sydauria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,25 +26,25 @@ size_t gettime(void)
 	return((tv.tv_sec * 1000) + tv.tv_usec);
 }
 
-int	mutex_print(int nb, char *str, t_philo *philo)
+int	mutex_print(int nb, char *str, t_global *global)
 {
-	pthread_mutex_lock(&philo->print_mutex);
+	nb++;
+	pthread_mutex_lock(&global->print_mutex);
 	printf("%ld %d %s\n", gettime(), nb, str);
-	pthread_mutex_unlock(&philo->print_mutex);
+	pthread_mutex_unlock(&global->print_mutex);
 	return (1);
 }
-
 /*
-void mutex_access(t_philo *philo, pthread_mutex_t *mutex, size_t value, int (*ft)(), void *arg);
+void mutex_access(t_global *global, pthread_mutex_t *mutex, size_t value, int (*ft)(), void *arg);
 {
 	pthread_mutex_lock(mutex);
-	ft(philo);
+	ft(global);
 	pthread_mutex_unlock(mutex);
 }
 
-void set_death(t_philo *philo)
+void set_death(t_global *global)
 {
-	philo->death = 1;
+	global->death = 1;
 }*/
 
 

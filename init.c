@@ -6,76 +6,84 @@
 /*   By: sydauria <sydauria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/21 19:48:26 by sydauria          #+#    #+#             */
-/*   Updated: 2022/12/23 03:31:56 by sydauria         ###   ########.fr       */
+/*   Updated: 2022/12/31 07:00:08 by sydauria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosopher.h"
 
-static int	init_print_mutex(t_philo *philo)
+static int	init_print_mutex(t_global *global)
 {
-	pthread_mutex_init(&philo->print_mutex, NULL);
+	pthread_mutex_init(&global->print_mutex, NULL);
 	return (1);
 }
 
-static int	init_death_mutex(t_philo *philo)
+static int	init_death_mutex(t_global *global)
 {
-	pthread_mutex_init(&philo->death_mutex, NULL);
+	pthread_mutex_init(&global->death_mutex, NULL);
 	return (1);
 }
 
-
-static int	init_last_eat_array(t_philo *philo)
+int	init_philo_array(t_global *global)
 {
-	int	i;
+	global->philos = malloc(sizeof(t_philo) * global->nb);
+	if (!global->philos)
+		return (0);
+	return (1);
+}
 
+int	init_storage_id(t_global *global)
+{
+	global->wait_id = malloc(sizeof(pthread_t) * global->nb);
+	if (!global->wait_id)
+		return(0);
+	return (1);
+}
+
+int init_philo_struct(t_global *global)
+{
+	int		i;
+	int		meal;
+	size_t	time_to_eat;
+	size_t	time_to_sleep;
+	
 	i = 0;
-	philo->philo_last_eat = malloc(sizeof(size_t) * philo->nb);
-	if (!philo->philo_last_eat)
-		return (0);
-	while ((size_t)i < philo->nb)
+	meal = global->meal_to_eat;
+	time_to_eat = global->time_to_eat;
+	time_to_sleep = global->time_to_sleep;
+	while (i < global->nb)
 	{
-		philo->philo_last_eat[i] = gettime();
-		if (philo->philo_last_eat[i] == (size_t)0)
-		{
-			free(philo->philo_last_eat);
+		global->philos[i].id = i;
+		global->philos[i].meals = meal;
+		global->philos[i].time_to_eat = time_to_eat;
+		global->philos[i].time_to_sleep = time_to_sleep;
+		global->philos[i].global = global;
+		if (pthread_mutex_init(&global->philos[i].fork_mutex, NULL))
 			return (0);
-		}
+		if (i > 0)
+			global->philos[i].right_fork_mutex = global->philos[i - 1].fork_mutex;
+		if (i == global->nb - 1)
+			global->philos[0].right_fork_mutex = global->philos[i].fork_mutex;
 		i++;
 	}
-	return (1);
+	return(1);
 }
 
-static int	init_mutex_fork(t_philo *philo)
+int	init(t_global *global)
 {
-	int	i;
-
-	i = 1;
-	philo->fork_mutex = malloc(sizeof(pthread_mutex_t) * (philo->nb + 1));
-	if (!philo->fork_mutex)
+	if (!init_print_mutex(global))
 		return (0);
-	while ((size_t)i < philo->nb + 1)
+	if (!init_death_mutex(global))
+		return (0);
+	if (!init_philo_array(global))
+		return (0);
+	if (!init_storage_id(global))
 	{
-		pthread_mutex_init(&philo->fork_mutex[i], NULL);
-		i++;
-	}
-	philo->fork_mutex[0] = philo->fork_mutex[philo->nb];
-	return (1);
-}
-
-int	init(t_philo *philo)
-{
-	if (!init_print_mutex(philo))
-		return (0);
-	if (!init_death_mutex(philo))
-		return (0);
-	if (!init_last_eat_array(philo))
-		return (0);
-	if (!init_mutex_fork(philo))
-	{
-		free(philo->philo_last_eat);
+		free(global->philos);
 		return (0);
 	}
+	if (!init_philo_struct(global))
+		return(0);
 	return (1);
 }
 

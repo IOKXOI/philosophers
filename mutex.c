@@ -6,32 +6,32 @@
 /*   By: sydauria <sydauria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/21 20:32:26 by sydauria          #+#    #+#             */
-/*   Updated: 2022/12/22 20:33:39 by sydauria         ###   ########.fr       */
+/*   Updated: 2022/12/30 22:29:32 by sydauria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosopher.h"
 /*
-void mutex_access(t_philo *philo, pthread_mutex_t *mutex, size_t value, int (*ft)(), void *arg);
+void mutex_access(t_global *global, pthread_mutex_t *mutex, size_t value, int (*ft)(), void *arg);
 {
 	pthread_mutex_lock(mutex);
-	ft(philo);
+	ft(global);
 	pthread_mutex_unlock(mutex);
 }
 
-void set_death(t_philo *philo)
+void set_death(t_global *global)
 {
-	philo->death = 1;
+	global->death = 1;
 }*/
 
-int	check_death(t_philo *philo)
+int	is_dead(t_global *global)
 {
-	pthread_mutex_lock(&philo->death_mutex);
-	if (philo->death)
+	pthread_mutex_lock(&global->death_mutex);
+	if (global->death)
 	{
-		pthread_mutex_unlock(&philo->death_mutex);
-		return (0);
+		pthread_mutex_unlock(&global->death_mutex);
+		return (1);
 	}
-	pthread_mutex_unlock(&philo->death_mutex);
-	return (1);
+	pthread_mutex_unlock(&global->death_mutex);
+	return (0);
 }

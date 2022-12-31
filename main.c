@@ -1,50 +1,46 @@
 #include "philosopher.h"
 
 //creer tout les threads
-int create_philo(t_philo *philo)
+int create_philo(t_global *global)
 {
 	int i;
-    philo->i = 0;
-    philo->id = malloc(sizeof(pthread_t) * (philo->nb));
-    if(!philo->id)
-        return (0);
-    while (philo->i < philo->nb)
-    {
-        if (pthread_create(&philo->id[philo->i], NULL, &routine, philo))
-            printf("error\n");
-        philo->i++;
-    }
-    //if (pthread_create(&philo->id[philo->i], NULL, &monitoring, philo))
-     //   printf("error\n");
+
 	i = 0;
-	while ((size_t)i < philo->nb)
+	while (i < global->nb)
 	{
-		pthread_join(philo->id[i], NULL);
+		if (pthread_create(&global->wait_id[i], NULL, &routine, &global->philos[i]))
+			printf("error\n");
+		i++;
+		usleep(200);
+	}
+	if (pthread_create(&global->wait_id[global->i], NULL, &monitoring, global))
+	   printf("error\n");
+	i = 0;
+	while (i < global->nb)
+	{
+		pthread_join(global->wait_id[i], NULL);
 		i++;
 	}
-    return(1);
+	return(1);
 }
 
-int	clean(t_philo *philo)
+int	clean(t_global *global)
 {
-	free(philo->philo_last_eat);
-	free(philo->id);
-	free(philo->fork_mutex);
+	free(global->wait_id);
 	return (1);
 }
 
 int main(int argc, char *argv[])
 {
-	t_philo philo;
-	philo.fork = 0;
-	philo.nb = 0;
-	philo.death = 0;
-	if (!args_traitment(argc, argv, &philo))
+	t_global global;
+	global.nb = 0;
+	global.death = 0;
+	if (!args_traitment(argc, argv, &global))
 		return (1);
-	if(!init(&philo))
+	if(!init(&global))
 		return(1);
-	if (!create_philo(&philo))
+	if (!create_philo(&global))
 		return(1);
-	clean(&philo);
+	clean(&global);
 	return (0);
 }
