@@ -7,6 +7,7 @@ int s_atoi(char *str, int *nb)
 
 	i = 0;
 	number = 0;
+	//*nb = number;
 	if (!str || str[i] == '\0')
 		return(0);
 	if (!(str[i] >= '0' && str[i] <= '9'))

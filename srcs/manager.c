@@ -6,7 +6,7 @@
 /*   By: sydauria <sydauria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/21 05:21:36 by sydauria          #+#    #+#             */
-/*   Updated: 2022/12/31 20:10:39 by sydauria         ###   ########.fr       */
+/*   Updated: 2022/12/31 09:06:28 by sydauria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ size_t gettime(void)
 int	mutex_print(int nb, char *str, t_global *global)
 {
 	nb++;
-
 	pthread_mutex_lock(&global->print_mutex);
 	printf("%ld %d %s\n", gettime(), nb, str);
 	pthread_mutex_unlock(&global->print_mutex);

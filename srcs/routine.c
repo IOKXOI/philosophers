@@ -4,6 +4,7 @@ static int think(t_philo *philo)
 {
 	if (!is_dead(philo->global))
 		mutex_print(philo->id, "is thinking", philo->global);
+	usleep(100);
 	return (1);
 }
 
@@ -16,7 +17,7 @@ static int eat(t_philo *philo)
 	}
 	if (!is_dead(philo->global))
 		mutex_print(philo->id, "has taken a fork", philo->global);
-	//if (!is_dead(philo->global))
+	if (!is_dead(philo->global))
 		mutex_print(philo->id, "is eating", philo->global);
 	philo->last_eat = gettime();
 	//if (!global->global_last_eat[i - 1])
@@ -24,26 +25,22 @@ static int eat(t_philo *philo)
 	//	write(probleme gettime of day);
 	//	return (0);
 	// }
-	printf("time_to_eat == %ld\n", philo->time_to_eat);
 	usleep(philo->time_to_eat);
-	//if (!is_dead(philo->global))
-	//{
-		mutex_print(philo->id, "pose la fourchette", philo->global);
+	if (!is_dead(philo->global))
+	{
 		pthread_mutex_unlock(&philo->fork_mutex);
 		pthread_mutex_unlock(&philo->right_fork_mutex);
-
-	//}
+		mutex_print(philo->id, "FINI\n", philo->global);
+	}
 	return (1);
 }
 
 static int sleeping(t_philo *philo)
 {
 	if (!is_dead(philo->global))
-	{
 		mutex_print(philo->id, "is sleeping", philo->global);
-	//if (!is_dead(philo->global))
+	if (!is_dead(philo->global))
 		usleep(philo->time_to_sleep);
-	}
 	return (1);
 }
 /*
@@ -122,7 +119,7 @@ void *monitoring(void *arg)
 	}
 	pthread_mutex_lock(&global->death_mutex);
 	global->death = 1;
-	pthread_mutex_unlock(&global->death_mutex);
+	pthread_mutex_lock(&global->death_mutex);
 	return (NULL);
 }
 
@@ -132,15 +129,10 @@ void *routine(void *arg)
 	t_global	*global = philo->global;
 	while (!is_dead(global) && philo->meals)
 	{
-		if (eat(philo))
-		{
-			if(sleeping(philo))
-			{
-				if (!think(philo))
-					return (NULL);
-			}
-			philo->meals--;
-		}
+		eat(philo);
+		sleeping(philo);
+		think(philo);
+		philo->meals--;
 	}
 	return (NULL);
 }

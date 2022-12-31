@@ -1,0 +1,12 @@
+verif arguments;
+traitements args/convertion etc ...
+creation des threads;
+execution des routines;
+    _essaye de chopper la fourchette a gauche;
+    _essaye de chopper sa fouchette;
+    _si les deux fourchettes sont unlock; les locks.
+    _mange;
+    _dors;
+    _essaye de chopper les fouchettes;
+    
+fin;

@@ -4,7 +4,7 @@
 int create_philo(t_global *global)
 {
 	int			i;
-	//pthread_t	monitor;
+	pthread_t	monitor;
 
 	i = 0;
 	while (i < global->nb)
@@ -16,9 +16,9 @@ int create_philo(t_global *global)
 		usleep(200);
 	}
 	i = 0;
-	//if (pthread_create(&monitor, NULL, &monitoring, global))
-	//	printf("error\n");
-	//pthread_join(monitor, NULL);
+	if (pthread_create(&monitor, NULL, &monitoring, global))
+		printf("error\n");
+	pthread_join(monitor, NULL);
 	while (i < global->nb)
 	{
 		pthread_join(global->wait_id[i], NULL);

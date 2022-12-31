@@ -1,12 +1,22 @@
-verif arguments;
-traitements args/convertion etc ...
-creation des threads;
-execution des routines;
-    _essaye de chopper la fourchette a gauche;
-    _essaye de chopper sa fouchette;
-    _si les deux fourchettes sont unlock; les locks.
-    _mange;
-    _dors;
-    _essaye de chopper les fouchettes;
-    
-fin;
+probleme dans le lock des right_fork_mutex et fork_mutex (les threads accedent aux fourchettes en meme temps)
+et je ne rentre jamais dans le if "(!is_dead(philo->global))" de la fonction eat pour unlock
+
+
+les threads ne meurent pas alors qu'ils doivent
+
+quand ils meurent il peut y avoir un message qui apparait apres
+
+demander pour comportement bizarre quand je n'initilisez pas "global.time_to_eat = 0;" dans le main (unitialised value)
+malgres l'init avec atoi
+
+
+{
+    monitoring en commentaire
+    suppresion de beaucoup de check "if(!is_dead) (et verifier tout les mutex)
+    reverifier printf de debug
+    reverifier init des global->philos[i] et des globals->wait->id[i]
+    reverifier init des forks et reverifier les mutex et init des mutex
+    reverifier les variables des structures et supprimer si neccessaire
+    reflechir a optimisations possiblez des mutex et printmutex
+    verifier les init de la variable death et toutes ces mdifications possibles
+}
