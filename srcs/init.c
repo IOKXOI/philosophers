@@ -6,7 +6,7 @@
 /*   By: sydauria <sydauria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/21 19:48:26 by sydauria          #+#    #+#             */
-/*   Updated: 2022/12/31 09:21:15 by sydauria         ###   ########.fr       */
+/*   Updated: 2023/01/03 21:57:49 by sydauria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,20 +36,22 @@ int	init_storage_id(t_global *global)
 {
 	global->wait_id = malloc(sizeof(pthread_t) * global->nb);
 	if (!global->wait_id)
-		return(0);
+		return (0);
 	return (1);
 }
 
-int init_philo_struct(t_global *global)
+int	init_philo_struct(t_global *global)
 {
 	int		i;
 	int		meal;
 	size_t	time_to_eat;
+	size_t	time_to_die;
 	size_t	time_to_sleep;
-	
+
 	i = 0;
 	meal = global->meal_to_eat;
 	time_to_eat = global->time_to_eat;
+	time_to_die = global->time_to_die;
 	time_to_sleep = global->time_to_sleep;
 	while (i < global->nb)
 	{
@@ -57,17 +59,18 @@ int init_philo_struct(t_global *global)
 		global->philos[i].meals = meal;
 		global->philos[i].end = 0;
 		global->philos[i].time_to_eat = time_to_eat;
+		global->philos[i].time_to_die = time_to_die;
 		global->philos[i].time_to_sleep = time_to_sleep;
 		global->philos[i].global = global;
 		if (pthread_mutex_init(&global->philos[i].fork_mutex, NULL))
 			return (0);
 		if (i > 0)
-			global->philos[i].right_fork_mutex = global->philos[i - 1].fork_mutex;
+			global->philos[i].right_fork_mutex = &global->philos[i - 1].fork_mutex;
 		if (i == global->nb - 1)
-			global->philos[0].right_fork_mutex = global->philos[i].fork_mutex;
+			global->philos[0].right_fork_mutex = &global->philos[i].fork_mutex;
 		i++;
 	}
-	return(1);
+	return (1);
 }
 
 int	init(t_global *global)
@@ -84,7 +87,7 @@ int	init(t_global *global)
 		return (0);
 	}
 	if (!init_philo_struct(global))
-		return(0);
+		return (0);
 	return (1);
 }
 
