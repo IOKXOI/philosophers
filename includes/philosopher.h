@@ -6,7 +6,7 @@
 /*   By: sydauria <sydauria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 09:20:08 by sydauria          #+#    #+#             */
-/*   Updated: 2023/01/03 23:46:51 by sydauria         ###   ########.fr       */
+/*   Updated: 2023/01/05 13:39:23 by sydauria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ typedef struct s_global
 	struct s_philo	*philos;
 	pthread_t		*wait_id;
 	pthread_mutex_t	print_mutex;
+	pthread_mutex_t	fork_mutex;
 	pthread_mutex_t	death_mutex;
 	pthread_mutex_t	*time_to_die_mutex;
 	size_t			i;
@@ -47,8 +48,8 @@ typedef struct s_philo
 	size_t			time_to_die;
 	size_t			time_to_sleep;
 	size_t			last_eat;
-	pthread_mutex_t	*right_fork_mutex;
-	pthread_mutex_t	fork_mutex;
+	pthread_mutex_t	*left_fork_mutex;
+	pthread_mutex_t	right_fork_mutex;
 	t_global		*global;
 }	t_philo;
 
@@ -65,8 +66,9 @@ int		is_dead(t_global *global);
 int		init(t_global *global);
 
 // manager.c //
-size_t	gettime(void);
+size_t		gettime(void);
 void		mutex_print(int nb, char *str, t_global *global);
+void		custom_sleep(t_philo *philo, size_t action_time);
 
 // routine.c //
 void	*only_one(void *arg);

@@ -6,7 +6,7 @@
 /*   By: sydauria <sydauria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 09:20:20 by sydauria          #+#    #+#             */
-/*   Updated: 2023/01/03 23:49:08 by sydauria         ###   ########.fr       */
+/*   Updated: 2023/01/05 13:35:21 by sydauria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,12 @@ static int	eat(t_philo *philo)
 {
 	if (!is_dead(philo->global))
 	{
-		pthread_mutex_lock(philo->right_fork_mutex);
-		pthread_mutex_lock(&philo->fork_mutex);
+		pthread_mutex_lock(&philo->global->fork_mutex);
+		pthread_mutex_lock(philo->left_fork_mutex);
+		mutex_print(philo->id, "left_fork_lock\n", philo->global);
+		pthread_mutex_lock(&philo->right_fork_mutex);
+		mutex_print(philo->id, "his_fork_lock\n", philo->global);
+		pthread_mutex_unlock(&philo->global->fork_mutex);
 		if (!is_dead(philo->global))
 		{
 			mutex_print(philo->id, "has taken a fork", philo->global);
@@ -35,22 +39,23 @@ static int	eat(t_philo *philo)
 			if (!is_dead(philo->global))
 			{
 				mutex_print(philo->id, "is eating", philo->global);
-				philo->last_eat = gettime();
 				if (!is_dead(philo->global))
 				{
+					printf("last_eat + time_to_die  == %ld \n                        == %ld \n", philo->last_eat + philo->global->time_to_die, gettime());
 					printf("time to eat ===== %ld\n\n", philo->time_to_eat);
-					usleep(philo->time_to_eat);
+					custom_sleep(philo, philo->time_to_eat);
+					philo->last_eat = gettime();
 					if (!is_dead(philo->global))
 					{
-						pthread_mutex_unlock(&philo->fork_mutex);
-						pthread_mutex_unlock(philo->right_fork_mutex);
+						pthread_mutex_unlock(philo->left_fork_mutex);
+						pthread_mutex_unlock(&philo->right_fork_mutex);
 						return (1);
 					}
 				}
 			}
 		}
-	pthread_mutex_unlock(&philo->fork_mutex);
-	pthread_mutex_unlock(philo->right_fork_mutex);
+	pthread_mutex_unlock(philo->left_fork_mutex);
+	pthread_mutex_unlock(&philo->right_fork_mutex);
 	}
 	return (0);
 }
@@ -62,7 +67,7 @@ static int	sleeping(t_philo *philo)
 		mutex_print(philo->id, "is sleeping", philo->global);
 		if (!is_dead(philo->global))
 		{
-			usleep(philo->time_to_sleep);
+			custom_sleep(philo, philo->time_to_sleep);
 			return (1);
 		}
 	}
@@ -71,7 +76,7 @@ static int	sleeping(t_philo *philo)
 
 int	check_timer(t_philo philo, size_t time_to_die)
 {
-	//printf("last_eat + time_to_die  == %ld \n                        == %ld \n", philo.last_eat + time_to_die, gettime());
+	
 	//if ((philo.last_eat + time_to_die) <= gettime())
 	if (gettime() > philo.last_eat + time_to_die)
 	{

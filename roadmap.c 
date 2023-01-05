@@ -1,4 +1,4 @@
-probleme dans le lock des right_fork_mutex et fork_mutex (les threads accedent aux fourchettes en meme temps)
+probleme dans le lock des left_fork_mutex et fork_mutex (les threads accedent aux fourchettes en meme temps)
 et je ne rentre jamais dans le if "(!is_dead(philo->global))" de la fonction eat pour unlock
 
 
