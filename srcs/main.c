@@ -6,7 +6,7 @@
 /*   By: sydauria <sydauria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 09:17:16 by sydauria          #+#    #+#             */
-/*   Updated: 2023/01/05 13:40:35 by sydauria         ###   ########.fr       */
+/*   Updated: 2023/01/09 06:40:28 by sydauria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	create_philo(t_global *global)
 	i = 0;
 	while (i < global->nb)
 	{
-		global->philos[i].last_eat = gettime();
+		global->philos[i].last_eat = 0;
 		if (pthread_create(&global->wait_id[i], NULL, &routine, &global->philos[i]))
 			printf("error\n");
 		usleep(200);
@@ -51,9 +51,20 @@ void	*only_one(void *arg)
 
 	global = arg;
 	usleep(global->time_to_die);
-	printf("%ld 1 is dead\n", gettime());
+	printf("%ld 1 died", gettime(global->philos->time_start));
 	return (NULL);
 }
+/*
+int	prelock_forks(t_global *global)
+{
+	int	i;
+
+	i = 0;
+	while (i < global->nb)
+	{
+		
+	}
+}*/
 
 int	main(int argc, char *argv[])
 {
@@ -63,15 +74,19 @@ int	main(int argc, char *argv[])
 	global.time_to_eat = 0;
 	global.meal_to_eat = 0;
 	global.time_to_die = 0;
+	global.time_to_sleep = 0;
 	global.death = 0;
+	global.fd1 = open("/dev/pts/1", O_WRONLY);
+	global.fd2 = open("/dev/pts/3", O_WRONLY);
+	global.fd3 = open("/dev/pts/0", O_WRONLY);
+	global.fd4 = open("/dev/pts/2", O_WRONLY);
+	global.fd5 = open("/dev/pts/4", O_WRONLY);
 	if (!args_traitment(argc, argv, &global))
 		return (1);
 	if (!init(&global))
 		return (1);
-	printf("ok\n");
 	if (global.nb > 1)
 	{
-		global.start = gettime();
 		if (!create_philo(&global))
 			return (1);
 	}

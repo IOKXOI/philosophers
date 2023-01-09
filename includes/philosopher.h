@@ -6,7 +6,7 @@
 /*   By: sydauria <sydauria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 09:20:08 by sydauria          #+#    #+#             */
-/*   Updated: 2023/01/05 13:39:23 by sydauria         ###   ########.fr       */
+/*   Updated: 2023/01/09 02:12:49 by sydauria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,17 @@
 # include <stdbool.h>
 # include <sys/time.h>
 
+#include <sys/types.h>
+       #include <sys/stat.h>
+       #include <fcntl.h>
+
 typedef struct s_global
 {
+	int fd1;
+	int fd2;
+	int fd3;
+	int fd4;
+	int fd5;
 	size_t			start;
 	bool			death;
 	struct s_philo	*philos;
@@ -41,6 +50,7 @@ typedef struct s_global
 
 typedef struct s_philo
 {
+	struct timeval	time_start;
 	int				id;
 	int				meals;
 	int				end;
@@ -66,10 +76,10 @@ int		is_dead(t_global *global);
 int		init(t_global *global);
 
 // manager.c //
-size_t		gettime(void);
+size_t		gettime(struct timeval start);
 void		mutex_print(int nb, char *str, t_global *global);
 void		custom_sleep(t_philo *philo, size_t action_time);
 
 // routine.c //
-void	*only_one(void *arg);
+void		*only_one(void *arg);
 #endif
