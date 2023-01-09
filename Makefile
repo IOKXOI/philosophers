@@ -6,7 +6,7 @@
 #    By: sydauria <sydauria@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/03 18:03:36 by sydauria          #+#    #+#              #
-#    Updated: 2023/01/09 04:16:17 by sydauria         ###   ########.fr        #
+#    Updated: 2023/01/09 09:18:46 by sydauria         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,7 @@ NAME = philo
 SRCS =	srcs/args_traitment.c \
 		srcs/atoi_ptr.c \
 		srcs/init.c \
+		srcs/init2.c \
 		srcs/main.c \
 		srcs/manager.c \
 		srcs/mutex.c \

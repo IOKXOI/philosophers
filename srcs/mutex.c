@@ -6,11 +6,11 @@
 /*   By: sydauria <sydauria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/21 20:32:26 by sydauria          #+#    #+#             */
-/*   Updated: 2023/01/05 14:47:13 by sydauria         ###   ########.fr       */
+/*   Updated: 2023/01/09 08:40:01 by sydauria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosopher.h"
+#include "philo.h"
 
 int	is_dead(t_global *global)
 {
@@ -23,5 +23,3 @@ int	is_dead(t_global *global)
 	pthread_mutex_unlock(&global->death_mutex);
 	return (0);
 }
-
-

@@ -6,17 +6,17 @@
 /*   By: sydauria <sydauria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 09:22:48 by sydauria          #+#    #+#             */
-/*   Updated: 2023/01/09 00:11:40 by sydauria         ###   ########.fr       */
+/*   Updated: 2023/01/09 08:40:01 by sydauria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosopher.h"
+#include "philo.h"
 
 static int	argument_count(int argc)
 {
 	if (argc < 5 || argc > 6)
 	{
-		printf("usage: number_of_philosopher, time_to_die, time_to_eat, time_to_sleep, [number_of_times_each_philosopher_must_eat]");
+		printf(BAD_INPUT);
 		return (0);
 	}
 	return (1);
@@ -24,8 +24,10 @@ static int	argument_count(int argc)
 
 static int	parsing_argv(int argc, char *argv[], t_global *global)
 {
-	if (!s_atoi(argv[1], &global->nb) || !s_atoi(argv[2], &global->time_to_die) ||
-		!s_atoi(argv[3], &global->time_to_eat) || !s_atoi(argv[4], &global->time_to_sleep))
+	if (!s_atoi(argv[1], &global->nb)
+		|| !s_atoi(argv[2], &global->time_to_die)
+		|| !s_atoi(argv[3], &global->time_to_eat)
+		|| !s_atoi(argv[4], &global->time_to_sleep))
 	{
 		printf("Input error\n");
 		return (0);

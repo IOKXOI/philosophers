@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philosopher.h                                      :+:      :+:    :+:   */
+/*   philo.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sydauria <sydauria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 09:20:08 by sydauria          #+#    #+#             */
-/*   Updated: 2023/01/09 02:12:49 by sydauria         ###   ########.fr       */
+/*   Updated: 2023/01/09 08:35:16 by sydauria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILOSOPHER_H
-# define PHILOSOPHER_H
+#ifndef PHILO_H
+# define PHILO_H
 
 # include <pthread.h>
 # include <unistd.h>
@@ -20,17 +20,11 @@
 # include <stdbool.h>
 # include <sys/time.h>
 
-#include <sys/types.h>
-       #include <sys/stat.h>
-       #include <fcntl.h>
+# define BAD_INPUT "usage: number_of_philosopher, time_to_die, time_to_eat, \
+time_to_sleep, [number_of_times_each_philosopher_must_eat]"
 
 typedef struct s_global
 {
-	int fd1;
-	int fd2;
-	int fd3;
-	int fd4;
-	int fd5;
 	size_t			start;
 	bool			death;
 	struct s_philo	*philos;
@@ -73,13 +67,22 @@ int		s_atoi(char *str, void *nb);
 int		is_dead(t_global *global);
 
 // init.c //
+int		init_print_mutex(t_global *global);
+int		init_fork_mutex(t_global *global);
+int		init_death_mutex(t_global *global);
+int		init_philo_array(t_global *global);
+int		init_storage_id(t_global *global);
+
+// init2.c //
+int		init_philo_struct(t_global *global);
 int		init(t_global *global);
 
 // manager.c //
-size_t		gettime(struct timeval start);
-void		mutex_print(int nb, char *str, t_global *global);
-void		custom_sleep(t_philo *philo, size_t action_time);
+void	mutex_print(int nb, char *str, t_global *global);
+void	custom_sleep(t_philo *philo, size_t action_time);
+int		check_timer(t_philo philo, size_t time_to_die);
+size_t	gettime(struct timeval start);
 
 // routine.c //
-void		*only_one(void *arg);
+void	*only_one(void *arg);
 #endif
